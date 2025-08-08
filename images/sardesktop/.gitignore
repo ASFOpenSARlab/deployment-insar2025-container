@@ -1,9 +1,0 @@
-**
-!.gitignore
-!build.sh
-!Dockerfile
-!download.sh
-!pkgs
-!pkgs/**
-!configs
-!configs/**
