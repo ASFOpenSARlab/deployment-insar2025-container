@@ -3,4 +3,4 @@
 set -ex
 # The idiom "&& [ $? -gt 2 ] && true" ignores warnings from the previous command
 
-echo "Hello World"
+echo "Hello World in tests"
