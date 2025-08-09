@@ -14,8 +14,8 @@ RUN apt-get update
 # ignore DL3009 since deleting apt-get lists makes later installs fail
 # hadolint ignore=DL3008,DL3009
 RUN apt-get install --no-install-recommends -y \
-        software-properties-common \
-        git && \
+    software-properties-common \
+    git && \
     apt-get install --no-install-recommends -y gpg-agent && \
     add-apt-repository -y ppa:ubuntugis/ubuntugis-unstable && \
     apt-get update && \
@@ -104,26 +104,26 @@ RUN mamba install -c conda-forge -y \
 # ignore DL3013 since pinning packages is not desired
 # hadolint ignore=DL3013,DL3059
 RUN python3 -m pip install --no-cache-dir  \
-        ### For ASF
-        url-widget \
-        opensarlab-frontend==1.5.1 \
-        jupyterlab-jupyterbook-navigation==0.2.0 \
-        jupyterlab_myst \
-        ### For pyGMTSAR
-        pygmtsar
+    ### For ASF
+    url-widget \
+    opensarlab-frontend==1.5.1 \
+    jupyterlab-jupyterbook-navigation==0.2.0 \
+    jupyterlab_myst \
+    ### For pyGMTSAR
+    pygmtsar
 WORKDIR /
 RUN     mkdir -p /tmp/build/GMTSAR /usr/local/GMTSAR &&\
-        git clone --branch master https://github.com/gmtsar/gmtsar /tmp/build/GMTSAR/
+    git clone --branch master https://github.com/gmtsar/gmtsar /tmp/build/GMTSAR/
 WORKDIR /tmp/build/GMTSAR
 RUN     autoconf &&\
-        ./configure --with-orbits-dir=/tmp CFLAGS='-z muldefs' LDFLAGS='-z muldefs' &&\
-        make &&\
-        make install &&\
-        mv -v /tmp/build/GMTSAR/bin /usr/local/GMTSAR/bin &&\
-        rm -rf /tmp/build
+    ./configure --with-orbits-dir=/tmp CFLAGS='-z muldefs' LDFLAGS='-z muldefs' &&\
+    make &&\
+    make install &&\
+    mv -v /tmp/build/GMTSAR/bin /usr/local/GMTSAR/bin &&\
+    rm -rf /tmp/build
 WORKDIR /
-    ### Extra stuff
-    # Make sure that any files in the home directory are jovyan permission
+### Extra stuff
+# Make sure that any files in the home directory are jovyan permission
 RUN chown -R jovyan:users "$HOME/" &&\
     # Make sure mamba (within conda) has write access
     chmod -R 777 /opt/conda/pkgs/ &&\
@@ -142,6 +142,14 @@ RUN chown -R jovyan:users "$HOME/" &&\
 
 ### GMTSAR
 ENV PATH=/usr/local/GMTSAR/bin:$PATH
+
+## Build extra mamba environment
+COPY environment/environment.yaml /tmp/environment.yaml
+
+RUN mamba env create -f /tmp/environment.yaml &&\
+    python3 -m ipykernel install --prefix /opt/conda/envs/earthscope_insar --name earthscope_insar --display-name "earthscope_insar" &&\
+    rm -rf /opt/conda/pkgs/cache &&\
+    conda env config vars set -n earthscope_insar EARTHSCOPE_HELLO_WORLD="HELLO THERE"
 
 WORKDIR /home/jovyan
 USER jovyan

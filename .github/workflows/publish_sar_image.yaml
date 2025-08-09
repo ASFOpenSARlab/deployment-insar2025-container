@@ -7,14 +7,14 @@ on:  # yamllint disable-line rule:truthy
   workflow_dispatch: {}
 
   push:
-    branches: ['main', 'test']
+    branches: ["main", "test"]
     tags:
       - "v*.*.*"
 
 # Defines two custom environment variables for the workflow. These are used for the Container registry domain, and a name for the Docker image that this workflow builds.
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}_sar
+  IMAGE_NAME: ${{ github.repository }}_earthscope
 
 # There is a single job in this workflow. It's configured to run on the latest available version of Ubuntu.
 jobs:
@@ -56,7 +56,7 @@ jobs:
         id: push
         uses: docker/build-push-action@v6.10.0
         with:
-          context: images/sar
+          context: images/earthscope
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
