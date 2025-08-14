@@ -1,4 +1,4 @@
-FROM jupyter/base-notebook:lab-4.0.7 as release
+FROM jupyter/base-notebook:lab-4.0.7 AS release
 
 # Base Stage ****************************************************************
 USER root
@@ -153,3 +153,8 @@ RUN mamba env create -f /tmp/environment.yaml &&\
 
 WORKDIR /home/jovyan
 USER jovyan
+
+
+FROM release AS testing
+
+RUN echo "hello world"
