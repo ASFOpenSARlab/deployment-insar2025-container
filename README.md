@@ -1,4 +1,8 @@
-# deployment-opensarlab-container
+# Archival notice
+This repository has been archived following the completion of the class.
+The container will continue to be available into the future.
+
+# deployment-insar2025-container
 
 This repository hosts the container image used by OpenSARLab,
 (as well as several others) an
